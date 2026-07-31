@@ -1,0 +1,130 @@
+identity:
+  name: "search_email"
+  author: "dq"
+  label:
+    en_US: "Search Email"
+    zh_Hans: "检索邮件"
+    pt_BR: "Search Email"
+    ja_JP: "メール検索"
+description:
+  human:
+    en_US: "Search and retrieve emails from the configured mailbox"
+    zh_Hans: "从配置的邮箱中检索和获取邮件"
+    pt_BR: "Search and retrieve emails from the configured mailbox"
+    ja_JP: "設定されたメールボックスからメールを検索・取得"
+  llm: "Search emails in the configured mailbox by folder, sender, subject, or date range. Returns a list of matching emails with their details."
+parameters:
+  - name: folder
+    type: string
+    required: false
+    default: "INBOX"
+    label:
+      en_US: "Mail Folder"
+      zh_Hans: "邮件文件夹"
+      pt_BR: "Mail Folder"
+      ja_JP: "メールフォルダ"
+    human_description:
+      en_US: "The mailbox folder to search (e.g. INBOX, Sent, Drafts)"
+      zh_Hans: "要搜索的邮箱文件夹（如 INBOX、Sent、Drafts）"
+      pt_BR: "The mailbox folder to search (e.g. INBOX, Sent, Drafts)"
+      ja_JP: "検索するメールフォルダ（INBOX、Sent、Drafts など）"
+    llm_description: "The mailbox folder to search. Default is INBOX. Common folders: INBOX, Sent, Drafts, Trash, Archive."
+    form: llm
+  - name: sender
+    type: string
+    required: false
+    label:
+      en_US: "Sender"
+      zh_Hans: "发件人"
+      pt_BR: "Sender"
+      ja_JP: "送信者"
+    human_description:
+      en_US: "Filter by sender email address"
+      zh_Hans: "按发件人邮箱地址筛选"
+      pt_BR: "Filter by sender email address"
+      ja_JP: "送信者のメールアドレスでフィルタ"
+    llm_description: "Filter emails by sender email address, e.g. user@example.com"
+    form: llm
+  - name: subject
+    type: string
+    required: false
+    label:
+      en_US: "Subject Keyword"
+      zh_Hans: "主题关键词"
+      pt_BR: "Subject Keyword"
+      ja_JP: "件名キーワード"
+    human_description:
+      en_US: "Search keyword in email subject"
+      zh_Hans: "邮件主题中的搜索关键词"
+      pt_BR: "Search keyword in email subject"
+      ja_JP: "メール件名の検索キーワード"
+    llm_description: "Keyword to search in email subject lines"
+    form: llm
+  - name: days
+    type: number
+    required: false
+    default: 0
+    label:
+      en_US: "Days Range"
+      zh_Hans: "距今天数"
+      pt_BR: "Days Range"
+      ja_JP: "日数範囲"
+    human_description:
+      en_US: "Search emails within the last N days. 0 means no date filter."
+      zh_Hans: "检索最近 N 天内的邮件，0 表示不限时间。"
+      pt_BR: "Search emails within the last N days. 0 means no date filter."
+      ja_JP: "過去N日以内のメールを検索。0は日付フィルタなし。"
+    llm_description: "Filter emails within the last N days from today. Set to 0 or leave empty to skip date filtering."
+    form: llm
+  - name: max_results
+    type: number
+    required: false
+    default: 10
+    label:
+      en_US: "Max Results"
+      zh_Hans: "最大结果数"
+      pt_BR: "Max Results"
+      ja_JP: "最大結果数"
+    human_description:
+      en_US: "Maximum number of emails to return"
+      zh_Hans: "返回的最大邮件数量"
+      pt_BR: "Maximum number of emails to return"
+      ja_JP: "返すメールの最大数"
+    llm_description: "Maximum number of email results to return, default is 10"
+    form: llm
+output_schema:
+  type: object
+  properties:
+    total_found:
+      type: integer
+      description: "Total number of emails found"
+    emails:
+      type: array
+      description: "List of matching emails"
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+            description: "Email ID"
+          from:
+            type: string
+            description: "Sender email address"
+          to:
+            type: string
+            description: "Recipient email address"
+          subject:
+            type: string
+            description: "Email subject"
+          date:
+            type: string
+            description: "Email date"
+          body:
+            type: string
+            description: "Full email body content"
+          body_preview:
+            type: string
+            description: "First 500 characters of email body"
+extra:
+  python:
+    source: tools/search_email.py
